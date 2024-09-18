@@ -52,7 +52,7 @@ function ThreeJSScene({ color, bgColor }) {
     scene.add(dodeca);
     scene.add(box);
 
-    setSceneObjects({ dodeca, box, material });
+    setSceneObjects({ material });
 
     let boxRadius = 4;
     let boxTheta = 0;
