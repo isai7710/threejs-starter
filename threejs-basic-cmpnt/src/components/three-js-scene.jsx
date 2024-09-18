@@ -42,8 +42,8 @@ function ThreeJSScene({ color, bgColor }) {
     const dodecaGeometry = new THREE.DodecahedronGeometry();
     const boxGeometry = new THREE.BoxGeometry(2, 0.1, 2);
     const material = new THREE.MeshLambertMaterial({
-      color: "#468585",
-      emissive: "#468585",
+      color: "#f68e87",
+      emissive: "#f68e87",
     });
 
     const dodeca = new THREE.Mesh(dodecaGeometry, material);
