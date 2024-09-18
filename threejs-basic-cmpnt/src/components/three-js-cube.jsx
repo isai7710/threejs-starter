@@ -5,27 +5,44 @@ const ThreeJSCube = () => {
   const mountRef = useRef(null);
 
   useEffect(() => {
-    // Scene setup
+    // Capture the current value of mountRef
+    const currentMount = mountRef.current;
+
+    // 1. Create the scene
     const scene = new THREE.Scene();
+    scene.background = new THREE.Color("#F0F0F0");
+
+    // 2. Add the camera
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
       0.1,
       1000,
     );
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth / 2, window.innerHeight / 2);
+    camera.position.z = 5;
 
-    // Add renderer to the DOM
-    mountRef.current.appendChild(renderer.domElement);
-
-    // Create cube
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+    // 3. Create and add a cube object
+    const geometry = new THREE.BoxGeometry();
+    const material = new THREE.MeshLambertMaterial({
+      color: "#468585",
+      emissive: "#468585",
+    });
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 
-    camera.position.z = 5;
+    // 4. Add lighting
+    const light = new THREE.DirectionalLight(0x9cdba6, 10);
+    light.position.set(1, 1, 1);
+    scene.add(light);
+
+    // 5. Set up the renderer
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth / 2, window.innerHeight / 2);
+    // Add renderer to the DOM
+    currentMount.appendChild(renderer.domElement);
+
+    // 6. Animate the scene
+    renderer.render(scene, camera);
 
     // Animation function
     const animate = () => {
@@ -39,21 +56,11 @@ const ThreeJSCube = () => {
 
     animate();
 
-    // Handle window resize
-    const handleResize = () => {
-      const width = window.innerWidth / 2;
-      const height = window.innerHeight / 2;
-      renderer.setSize(width, height);
-      camera.aspect = width / height;
-      camera.updateProjectionMatrix();
-    };
-
-    window.addEventListener("resize", handleResize);
-
     // Cleanup function
     return () => {
-      window.removeEventListener("resize", handleResize);
-      mountRef.current.removeChild(renderer.domElement);
+      if (currentMount) {
+        currentMount.removeChild(renderer.domElement);
+      }
     };
   }, []); // Empty dependency array ensures this effect runs once on mount
 
