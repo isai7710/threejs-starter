@@ -18,7 +18,8 @@ const ThreeJSScene = () => {
 
     // 1. Create the scene (container for all objects, cameras, and lights)
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color("#B0CFFF");
+    // toggle to add a custom background color
+    // scene.background = new THREE.Color("#B0CFFF");
 
     // 2. Add the camera (determines how and what we see in the scene)
     const camera = new THREE.PerspectiveCamera(
@@ -48,7 +49,8 @@ const ThreeJSScene = () => {
     scene.add(light);
 
     // 5. Set up the renderer - this draws the scene
-    const renderer = new THREE.WebGLRenderer();
+    // setting alpha: true allows for a transparent background when scene.background is not set
+    const renderer = new THREE.WebGLRenderer({ alpha: true });
     renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
 
@@ -131,7 +133,12 @@ const ThreeJSScene = () => {
 
   // The component renders a div that will contain our Three.js scene
   // The ref attribute connects this div to our useRef, allowing us to access it in the useEffect hook
-  return <div ref={mountRef} className="w-[50vw] h-[50vh]" />;
+  return (
+    <div
+      ref={mountRef}
+      className="w-[50vw] h-[50vh] bg-sky-100 bg-opacity-10 rounded-xl"
+    />
+  );
 };
 
 export default ThreeJSScene;
