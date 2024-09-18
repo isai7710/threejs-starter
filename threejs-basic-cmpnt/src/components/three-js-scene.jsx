@@ -1,79 +1,65 @@
-import { useRef, useEffect } from "react";
+import clsx from "clsx";
+import { useRef, useEffect, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
-const ThreeJSScene = () => {
-  // useRef creates a mutable reference that persists for the lifetime of the component
-  // it's used here to store a reference to the DOM element where we'll render our Three.js scene
+function ThreeJSScene({ color, bgColor }) {
   const mountRef = useRef(null);
+  const sceneRef = useRef(null);
+  const [sceneObjects, setSceneObjects] = useState(null);
 
-  // useEffect is used to perform 'side effects' in function components
-  // in this case, it's used to set up and manage our Three.js scene
   useEffect(() => {
-    // Capture the current value of mountRef
-    // This ensures we're consistent in working with the current DOM element throughout the effect
     const currentMount = mountRef.current;
 
-    // ---[[ Three.js Setup ]]---
-
-    // 1. Create the scene (container for all objects, cameras, and lights)
+    // Scene setup
     const scene = new THREE.Scene();
-    // toggle to add a custom background color
-    // scene.background = new THREE.Color("#B0CFFF");
+    sceneRef.current = scene;
 
-    // 2. Add the camera (determines how and what we see in the scene)
     const camera = new THREE.PerspectiveCamera(
-      75, // FOV
-      currentMount.clientWidth / currentMount.clientHeight, // Aspect Ratio
-      0.1, // Near clipping plane
-      1000, // Far clipping plane
+      75,
+      currentMount.clientWidth / currentMount.clientHeight,
+      0.1,
+      1000,
     );
-    camera.position.z = 10; // move the camera away from origin which is where cube will be placed
+    camera.position.z = 10;
 
-    // 3. Create and add objects (objects are meshes that are made up of a geometry and material)
+    const renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    currentMount.appendChild(renderer.domElement);
+
+    const light = new THREE.DirectionalLight(0x9cdba6, 10);
+    light.position.set(1, 1, 1);
+    scene.add(light);
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.enableZoom = true;
+    controls.enablePan = true;
+
+    // Create geometries and materials
     const dodecaGeometry = new THREE.DodecahedronGeometry();
     const boxGeometry = new THREE.BoxGeometry(2, 0.1, 2);
     const material = new THREE.MeshLambertMaterial({
       color: "#468585",
       emissive: "#468585",
     });
+
     const dodeca = new THREE.Mesh(dodecaGeometry, material);
     const box = new THREE.Mesh(boxGeometry, material);
     box.position.z = -2.0;
     scene.add(dodeca);
     scene.add(box);
 
-    // 4. Add lighting to the scene
-    const light = new THREE.DirectionalLight(0x9cdba6, 10);
-    light.position.set(1, 1, 1);
-    scene.add(light);
+    setSceneObjects({ dodeca, box, material });
 
-    // 5. Set up the renderer - this draws the scene
-    // setting alpha: true allows for a transparent background when scene.background is not set
-    const renderer = new THREE.WebGLRenderer({ alpha: true });
-    renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
-
-    // Attach the renderer to our designated div
-    // This is where useRef becomes crucial, allowing us to interact with the DOM
-    currentMount.appendChild(renderer.domElement);
-
-    // 6. Render the initial scene
-    renderer.render(scene, camera);
-
-    // 7. Add Orbit Controls
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.enableZooom = true;
-    controls.enablePan = true;
-
-    // 8. animate with animation function (which is called repeatedly to create the animation)
     let boxRadius = 4;
     let boxTheta = 0;
+
     const animate = () => {
-      requestAnimationFrame(animate); // Schedule the next frame
-      // rotate objects about x and y axes
+      requestAnimationFrame(animate);
+
       dodeca.rotation.x += 0.01;
       dodeca.rotation.y += 0.01;
       box.rotation.x += 0.01;
@@ -88,57 +74,58 @@ const ThreeJSScene = () => {
       boxTheta += 0.1;
 
       controls.update();
-
-      renderer.render(scene, camera); // Re-render the scene
+      renderer.render(scene, camera);
     };
 
-    // 8. Handle window resizing
     const handleResize = () => {
       if (currentMount) {
-        // Get the dimensions of the parent container
         const { clientWidth, clientHeight } = currentMount;
-
-        // Update camera and renderer size
         camera.aspect = clientWidth / clientHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(clientWidth, clientHeight);
         renderer.setPixelRatio(window.devicePixelRatio);
       }
     };
+
     handleResize();
     window.addEventListener("resize", handleResize);
-    // start animation loop
     animate();
 
-    // Cleanup function
-    // This function is returned from useEffect and will be called when the component unmounts
-    // or before the effect runs again (if it had dependencies that changed)
     return () => {
-      // The browser will automatically cancel the animation frame when the window/element is destroyed so we don't have to stop the animation loop
       window.removeEventListener("resize", handleResize);
       controls.dispose();
-
-      // Remove the Three.js canvas from the DOM
       if (currentMount) {
         currentMount.removeChild(renderer.domElement);
       }
-
-      // Dispose of Three.js objects to free up memory
       dodecaGeometry.dispose();
       boxGeometry.dispose();
       material.dispose();
       renderer.dispose();
     };
-  }, []); // Empty dependency array ensures this effect runs once on mount
+  }, []); // Empty dependency array, scene setup runs only once
 
-  // The component renders a div that will contain our Three.js scene
-  // The ref attribute connects this div to our useRef, allowing us to access it in the useEffect hook
+  // Update colors when props change
+  useEffect(() => {
+    if (sceneObjects) {
+      const newColor = color ? "#f68e87" : "#468585";
+      sceneObjects.material.color.setHex(
+        parseInt(newColor.replace("#", "0x"), 16),
+      );
+      sceneObjects.material.emissive.setHex(
+        parseInt(newColor.replace("#", "0x"), 16),
+      );
+    }
+  }, [color, sceneObjects]);
+
   return (
     <div
       ref={mountRef}
-      className="w-[50vw] h-[50vh] bg-sky-100 bg-opacity-10 rounded-xl"
+      className={clsx(
+        "w-[50vw] h-[50vh] bg-opacity-10 rounded-xl",
+        bgColor ? "bg-sky-100" : "bg-lime-500",
+      )}
     />
   );
-};
+}
 
 export default ThreeJSScene;
