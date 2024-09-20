@@ -8,7 +8,7 @@ function App() {
 
   return (
     <>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 items-center">
         <ThreeJSScene color={color} bgColor={bgColor} />
         <p>First Three.js Scene</p>
         <div className="flex justify-between gap-2">
