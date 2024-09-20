@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { Menu, XCircle } from "react-feather";
+import { navLinks } from "../constants";
 
 const NavItems = () => {
   return (
-    <ul>
-      {["Home", "About", "Projects", "Contact"].map((item, index) => (
-        <li key={index} className="nav-li">
-          <a href="/" className="nav-li_a">
-            {item}
+    <ul className="nav-ul">
+      {navLinks.map(({ id, name, href }) => (
+        <li key={id} className="nav-li">
+          <a href={href} className="nav-li_a" onClick={() => {}}>
+            {name}
           </a>
         </li>
       ))}
@@ -33,7 +34,7 @@ const Navbar = () => {
             className="text-neutral-400 hover:text-white focus:outline-none sm:hidden flex"
             aria-label="Toggle menu"
           >
-            {isOpen ? (
+            {!isOpen ? (
               <Menu className="w-6 h-6" />
             ) : (
               <XCircle className="w-6 h-6" />
@@ -44,6 +45,11 @@ const Navbar = () => {
             <NavItems />
           </nav>
         </div>
+      </div>
+      <div className={`nav-sidebar ${isOpen ? "max-h-screen" : "max-h-0"}`}>
+        <nav className="p-5">
+          <NavItems />
+        </nav>
       </div>
     </header>
   );
