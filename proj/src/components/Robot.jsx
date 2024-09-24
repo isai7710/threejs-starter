@@ -23,15 +23,15 @@ export default function Model(props) {
         geometry={nodes.Cylinder_Base_Isai_node.geometry}
         material={materials.Mat_1}
       />
-      <mesh geometry={nodes.nodes6.geometry} material={materials.Mat_4} />
-      <mesh geometry={nodes.nodes7.geometry} material={materials.Mat_4} />
-      <mesh geometry={nodes.nodes8.geometry} material={materials.Mat_4} />
-      <mesh geometry={nodes.nodes9.geometry} material={materials.Mat_4} />
-      <mesh geometry={nodes.nodes10.geometry} material={materials.Mat_4} />
-      <mesh geometry={nodes.nodes11.geometry} material={materials.Mat_4} />
-      <mesh geometry={nodes.nodes12.geometry} material={materials.Mat_4} />
-      <mesh geometry={nodes.nodes13.geometry} material={materials.Mat_4} />
-      <mesh geometry={nodes.nodes14.geometry} material={materials.Mat_4} />
+      <mesh geometry={nodes.nodes6.geometry} material={materials.Mat_1} />
+      <mesh geometry={nodes.nodes7.geometry} material={materials.Mat_1} />
+      <mesh geometry={nodes.nodes8.geometry} material={materials.Mat_1} />
+      <mesh geometry={nodes.nodes9.geometry} material={materials.Mat_1} />
+      <mesh geometry={nodes.nodes10.geometry} material={materials.Mat_1} />
+      <mesh geometry={nodes.nodes11.geometry} material={materials.Mat_1} />
+      <mesh geometry={nodes.nodes12.geometry} material={materials.Mat_1} />
+      <mesh geometry={nodes.nodes13.geometry} material={materials.Mat_1} />
+      <mesh geometry={nodes.nodes14.geometry} material={materials.Mat_1} />
       <mesh
         geometry={nodes.Arm1_Isai_20_node.geometry}
         material={materials.Mat_1}
