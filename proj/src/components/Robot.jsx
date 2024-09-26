@@ -11,7 +11,7 @@ export default function Model(props) {
 
   // Define a new material for wireframe
   const wireframeMaterial = new MeshBasicMaterial({
-    color: 0x00FFFFFF, // You can change the color if needed
+    color: 0x00ffffff, // You can change the color if needed
     wireframe: true,
     transparent: true,
     opacity: 0.5,
