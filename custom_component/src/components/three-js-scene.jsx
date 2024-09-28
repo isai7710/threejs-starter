@@ -39,18 +39,26 @@ function ThreeJSScene({ color, bgColor }) {
     controls.enablePan = true;
 
     // Create geometries and materials
-    const dodecaGeometry = new THREE.DodecahedronGeometry();
     const boxGeometry = new THREE.BoxGeometry(2, 0.1, 2);
     const material = new THREE.MeshLambertMaterial({
       color: "#f68e87",
       emissive: "#f68e87",
     });
-
-    const dodeca = new THREE.Mesh(dodecaGeometry, material);
     const box = new THREE.Mesh(boxGeometry, material);
     box.position.z = -2.0;
-    scene.add(dodeca);
     scene.add(box);
+    const dodecaGeometry = new THREE.DodecahedronGeometry();
+    const dodecaWireframeGeo = new THREE.EdgesGeometry(dodecaGeometry);
+    const lineMaterial = new THREE.LineBasicMaterial({
+      color: 0xffffff,
+      linewidth: 2,
+    });
+
+    const dodecaWireframe = new THREE.LineSegments(
+      dodecaWireframeGeo,
+      lineMaterial,
+    );
+    scene.add(dodecaWireframe);
 
     setSceneObjects({ material });
 
@@ -60,8 +68,8 @@ function ThreeJSScene({ color, bgColor }) {
     const animate = () => {
       requestAnimationFrame(animate);
 
-      dodeca.rotation.x += 0.01;
-      dodeca.rotation.y += 0.01;
+      dodecaWireframe.rotation.x += 0.01;
+      dodecaWireframe.rotation.y += 0.01;
       box.rotation.x += 0.01;
       box.rotation.y += 0.01;
 
