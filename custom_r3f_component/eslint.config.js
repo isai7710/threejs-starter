@@ -17,7 +17,11 @@ export default [
         sourceType: "module",
       },
     },
-    settings: { react: { version: "18.3" } },
+    settings: {
+      react: {
+        version: "detect", // Automatically detects the React version
+      },
+    },
     plugins: {
       react,
       "react-hooks": reactHooks,
@@ -28,11 +32,27 @@ export default [
       ...react.configs.recommended.rules,
       ...react.configs["jsx-runtime"].rules,
       ...reactHooks.configs.recommended.rules,
-      "react/prop-types": "off",
+
+      // Custom rules to handle specific cases
       "react/jsx-no-target-blank": "off",
       "react-refresh/only-export-components": [
         "warn",
         { allowConstantExport: true },
+      ],
+
+      // Ignoring unknown props for react-three-fiber components
+      "react/no-unknown-property": [
+        "error",
+        {
+          ignore: [
+            "args",
+            "color",
+            "attach",
+            "emissive",
+            "intensity",
+            "position",
+          ], // Add other custom props as needed
+        },
       ],
     },
   },
