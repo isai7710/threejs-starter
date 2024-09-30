@@ -8,12 +8,12 @@ import { Leva, useControls } from "leva";
 const Hero = () => {
   const controls = useControls("HackerRoom", {
     positionX: {
-      value: 2.5,
+      value: 0,
       min: -10,
       max: 10,
     },
     positionY: {
-      value: 2.5,
+      value: -2.5,
       min: -10,
       max: 10,
     },

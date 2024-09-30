@@ -4,7 +4,7 @@ Command: npx gltfjsx@6.5.2 robot.gltf
 */
 
 import { useGLTF } from "@react-three/drei";
-import { MeshBasicMaterial } from "three"; // Importing MeshBasicMaterial
+import { MeshBasicMaterial, LineBasicMaterial, EdgesGeometry } from "three"; // Importing MeshBasicMaterial
 
 export default function Model(props) {
   const { nodes } = useGLTF("models/robot.gltf");
@@ -16,16 +16,20 @@ export default function Model(props) {
     transparent: true,
     opacity: 0.5,
   });
+  const lineMaterial = new LineBasicMaterial({
+    color: 0xffffff,
+    linewidth: 2,
+  });
 
   return (
     <group {...props} dispose={null}>
       <mesh
-        geometry={nodes.Robot_Arm_Base_2_Isai_node.geometry}
-        material={wireframeMaterial}
+        geometry={new EdgesGeometry(nodes.Robot_Arm_Base_2_Isai_node.geometry)}
+        material={lineMaterial}
       />
       <mesh
-        geometry={nodes.Arm2_Isai_node.geometry}
-        material={wireframeMaterial}
+        geometry={new EdgesGeometry(nodes.Arm2_Isai_node.geometry)}
+        material={lineMaterial}
       />
       <mesh
         geometry={nodes.Cylinder_Base_Isai_node.geometry}
