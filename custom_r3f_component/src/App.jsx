@@ -16,7 +16,12 @@ const App = () => {
           gl={{ alpha: true }}
         >
           <PerspectiveCamera makeDefault position={[0, 10, 40]} />
-          <OrbitControls enableZoom enablePan enableRotate />
+          <OrbitControls
+            maxPolarAngle={Math.PI / 2}
+            enableZoom
+            enablePan
+            enableRotate
+          />
           <directionalLight
             position={[1, 1, 1]}
             intensity={10}
